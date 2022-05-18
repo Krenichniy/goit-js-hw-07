@@ -5,8 +5,6 @@ const refs = {
   galleryItem: null,
 };
 
-refs.gallery.addEventListener("click", openImageOnClick);
-
 function createGalleryMarkup() {
   const galleryGrid = galleryItems
     .map(({ preview, original, description }) => {
@@ -25,28 +23,44 @@ function createGalleryMarkup() {
 
   refs.gallery.insertAdjacentHTML("afterbegin", galleryGrid);
 }
+
 createGalleryMarkup();
 
-console.log(galleryItems);
-
 function openImageOnClick(event) {
-  if (event.target.nodeName !== "IMG") return;
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
 
   event.preventDefault();
 
-  const imageLink = event.target.dataset.value;
+  const imageOriginalLink = event.target.dataset.source;
 
-  const { original, description } = galleryItems;
-  refs.galleryItem = document.querySelector("gallery__image");
-
-  const instance = basicLightbox.create(
-    `   <img
-      class="gallery__image"
-      src="${original}"
-      data-source="${original}"
-      alt="${description}"
-    />`
-  );
+  instance
+    .element()
+    .querySelector("img")
+    .setAttribute("src", imageOriginalLink);
 
   instance.show();
+}
+
+refs.gallery.addEventListener("click", openImageOnClick);
+
+const instance = basicLightbox.create(`<img src="" width="800" height="600">`, {
+  closable: true,
+  onShow: () => {
+    document.addEventListener("keydown", closeByEscape);
+  },
+  onClose: (instance) => {
+    instance.element().querySelector("img").setAttribute("src", "");
+
+    document.removeEventListener("keydown", closeByEscape);
+  },
+});
+
+function closeByEscape(event) {
+  if (event.code === "Escape") {
+    if (instance.visible()) {
+      instance.close();
+    }
+  }
 }
