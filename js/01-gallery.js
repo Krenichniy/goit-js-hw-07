@@ -2,7 +2,6 @@ import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 const refs = {
   gallery: document.querySelector(".gallery"),
-  galleryItem: null,
 };
 
 function createGalleryMarkup() {

@@ -5,7 +5,6 @@ console.log(galleryItems);
 
 const refs = {
   gallery: document.querySelector(".gallery"),
-  galleryItem: null,
 };
 
 function createGalleryMarkup() {
